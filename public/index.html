@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Smart Communication Glove</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <div id="emergencyOverlay" class="emergency-overlay hidden">
+    <div class="emergency-card">
+      <div class="emergency-icon">!</div>
+      <h1>EMERGENCY</h1>
+      <p id="emergencyMessage">Assistance required</p>
+      <div id="emergencyCountdown">10</div>
+    </div>
+  </div>
+
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">ASSISTIVE COMMUNICATION SYSTEM</div>
+        <h1>Smart Glove Dashboard</h1>
+        <p>Cloud API, dynamic finger messages and multilingual communication</p>
+      </div>
+      <div class="status-stack">
+        <span id="apiStatus" class="status neutral">API CHECKING</span>
+        <span id="deviceStatus" class="status neutral">NO EVENT YET</span>
+      </div>
+    </header>
+
+    <section class="connect-card">
+      <div>
+        <h2>Dashboard Access</h2>
+        <p>Enter the admin key configured in your Cloudflare Worker.</p>
+      </div>
+      <div class="connect-row">
+        <input id="adminKey" type="password" placeholder="Admin API key" autocomplete="off" />
+        <button id="connectBtn">Connect Dashboard</button>
+        <button id="clearKeyBtn" class="secondary">Clear</button>
+      </div>
+      <div id="connectMessage" class="small-message"></div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <span>Last Finger</span>
+        <strong id="lastFinger">--</strong>
+      </article>
+      <article class="stat-card">
+        <span>Current Message</span>
+        <strong id="currentMessage">Waiting for glove event</strong>
+      </article>
+      <article class="stat-card">
+        <span>Event Type</span>
+        <strong id="eventType">--</strong>
+      </article>
+      <article class="stat-card">
+        <span>Last Event</span>
+        <strong id="lastEventTime">--</strong>
+      </article>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">LIVE OUTPUT</div>
+          <h2>Multilingual Message</h2>
+        </div>
+      </div>
+      <div class="language-grid">
+        <article class="language-card"><span>English</span><p id="langEnglish">--</p></article>
+        <article class="language-card"><span>Tamil</span><p id="langTamil">--</p></article>
+        <article class="language-card"><span>Telugu</span><p id="langTelugu">--</p></article>
+        <article class="language-card"><span>Malayalam</span><p id="langMalayalam">--</p></article>
+        <article class="language-card"><span>Hindi</span><p id="langHindi">--</p></article>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">DYNAMIC MAPPING</div>
+          <h2>Finger Message Configuration</h2>
+          <p>Change a finger value here. Saving automatically retranslates the new sentence.</p>
+        </div>
+        <button id="refreshConfigBtn" class="secondary">Refresh</button>
+      </div>
+      <div id="fingerConfigList" class="config-list">
+        <div class="empty-state">Connect with the admin key to load finger configuration.</div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <div class="eyebrow">EVENT LOG</div>
+          <h2>Recent Communication History</h2>
+        </div>
+        <button id="refreshEventsBtn" class="secondary">Refresh</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Time</th>
+              <th>Device</th>
+              <th>Finger</th>
+              <th>Message</th>
+              <th>Type</th>
+            </tr>
+          </thead>
+          <tbody id="eventTableBody">
+            <tr><td colspan="6" class="empty-cell">No events loaded.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div id="editModal" class="modal hidden">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div>
+          <div class="eyebrow">EDIT MAPPING</div>
+          <h2 id="editTitle">Finger</h2>
+        </div>
+        <button id="closeModalBtn" class="icon-btn">×</button>
+      </div>
+
+      <label class="field">
+        <span>New base message (English)</span>
+        <input id="editMessage" maxlength="120" placeholder="Example: Please call my caretaker" />
+      </label>
+
+      <label class="check-row">
+        <input id="editEmergency" type="checkbox" />
+        <span>Set this finger as the emergency finger</span>
+      </label>
+
+      <div class="translation-note">
+        On Save, Cloudflare Workers AI generates Tamil, Telugu, Malayalam and Hindi translations and stores them in D1.
+      </div>
+
+      <div id="saveMessage" class="small-message"></div>
+
+      <div class="modal-actions">
+        <button id="cancelEditBtn" class="secondary">Cancel</button>
+        <button id="saveEditBtn">Save & Auto Translate</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

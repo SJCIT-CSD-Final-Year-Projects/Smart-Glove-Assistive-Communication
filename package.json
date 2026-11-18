@@ -1,0 +1,15 @@
+{
+  "name": "gloves-proj",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Cloud-connected multilingual smart communication glove dashboard and REST API",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:init:local": "wrangler d1 execute gloves-db --local --file=./schema.sql",
+    "db:init:remote": "wrangler d1 execute gloves-db --remote --file=./schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.127.1"
+  }
+}
